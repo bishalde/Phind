@@ -1,0 +1,2 @@
+# Phind
+Generative AI website
