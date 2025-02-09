@@ -19,29 +19,16 @@ def chat():
         data = request.json
         uid = data.get('uid')
         modelName = data.get('modelName')
-        context = data.get('context', '').strip()  # Ensure context is clean
-        query = data.get('query', '').strip()      # Ensure query is clean
-        source = data.get('source', '').strip() # Ensure source is clean
+        query = data.get('query', '').strip()     
+        source = data.get('source', '').strip() 
 
-        # Check if context and query are provided
-        if not context or not query:
-            return jsonify({'error': 'Context and query must be provided.'}), 400
-
-        # System message to guide the LLM's behavior
-        system_message = (
-            """You are a highly specialized assistant. Your responses must strictly adhere to the context provided.
-            Do not provide any information that is not directly related to the context, if any question is asked
-            which is not in the document or irrelevant to the context of the documents you should then reply 'The question
-            is irrelevant to the context'.
-            Context: """ + context
-        )
 
         # Constructing the message list with strict guidelines
         messages = [
-            {
-                'role': 'system',
-                'content': system_message
-            },
+            # {
+            #     'role': 'system',
+            #     'content': system_message
+            # },
             {
                 'role': 'user',
                 'content': query
@@ -51,12 +38,12 @@ def chat():
         start_time = datetime.datetime.now()
 
         # Call the LLM model with context and query
-        if modelName == 'llama3.2:latest':
-            response = ollama.chat(model='llama3.2:latest', messages=messages)
-        elif modelName == 'llama3.1:latest':
-            response = ollama.chat(model='llama3.1:latest', messages=messages)
-        elif modelName == 'mistral:latest':
-            response = ollama.chat(model='mistral:latest', messages=messages)
+        if modelName == 'llama3.2:1b':
+            response = ollama.chat(model='llama3.2:1b', messages=messages)
+        # elif modelName == 'llama3.1:latest':
+        #     response = ollama.chat(model='llama3.1:latest', messages=messages)
+        # elif modelName == 'mistral:latest':
+        #     response = ollama.chat(model='mistral:latest', messages=messages)
         else :
             return jsonify({'error': f'Unsupported model: {modelName}'}), 400
 

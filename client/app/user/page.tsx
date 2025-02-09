@@ -8,7 +8,7 @@ const Page = () => {
     <section className="h-full w-full flex flex-col justify-center items-center bg-gradient-to-br from-navy to-black">
        <h3 className="text-white font-Poppins text-4xl"> Hello <span className="text-tone5 font-semibold">{userData['fullName']}</span> !</h3>
       <h1 className="text-white text-2xl mt-4 font-poppins font-semibold">🖐🖐Welcome to the Phind.👊👊</h1>
-       <h4 className="text-xl font-thin text-textTone1">Navigate and Summarize long documents and simplify complex PDFs with AI Chat.</h4>
+       <h4 className="text-xl font-thin text-textTone1">Dive into the world of intelligent, offline AI conversations. Transform the way you work, learn, and create with cutting-edge technology.</h4>
     </section>
   );
 };

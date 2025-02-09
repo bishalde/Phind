@@ -108,104 +108,41 @@ const ChatPage = () => {
 
   return (
     <>
-      <div className="chats relative flex flex-col min-h-screen max-h-screen w-full items-center">
-        {messages.length === 0 ? (
-          <div className="w-full min-h-screen flex flex-col items-center justify-center">
-            <h1 className="text-3xl text-white font-Poppins text-center py-2 animate-fadeIn">
-              Loading....!
-            </h1>
-            <h2 className="text-2xl text-tone3 font-Poppins animate-fadeInDelay">
-              Wait, while we fetch your chat history.
-            </h2>
-          </div>
-        ) : (
-          <div
-            ref={chatboxRef} // Attach ref to chatbox div
-            className="chatbox noscroll flex flex-col p-2 gap-4 w-[70%] max-h-svh overflow-y-scroll"
-          >
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`chat flex ${msg.sender === "llm" ? "justify-start" : "justify-end"}`}
-              >
-                <div
-                  className={`message rounded-xl px-4 text-white font-Montserrat ${msg.sender === "message" ? "bg-blue-500" : "bg-tone7"} animate-fadeIn`}
-                >
-                  {msg.sender === "loading" ? (
-                    <div className="flex items-center">
-                      <span className="loader mr-2"></span> {/* Loader */}
-                      <p>{msg.message}</p>
-                    </div>
-                  ) : (
-                    <>
-                      {/* Display the user's query if available */}
-                      {msg.query && (
-                        <div className="my-3 p-2 rounded-xl bg-textTone1 text-lg">
-                          <strong className="px-2 text-tone5">You :</strong> {msg.query}
-                        </div>
-                      )}
-                      <div className="p-4 rounded-b-xl whitespace-pre-wrap">
-                        {msg.message.split(/(<[^>]*>)/g).map((part, index) =>
-                          part.match(/<[^>]*>/) ? (
-                            <strong key={index}>{part}</strong>
-                          ) : (
-                            part
-                          )
-                        )}
+      <div className="chats relative flex flex-col min-h-screen max-h-screen w-full items-center ">
+        <div ref={chatboxRef} className="chatbox flex flex-col p-2 gap-4 w-[70%] max-h-svh overflow-y-scroll noscroll">
+          {messages.map((msg, index) => (
+            <div key={index} className={`chat flex ${msg.sender === "llm" ? "justify-start" : "justify-end"}`}>
+              <div className={`message rounded-xl px-4 text-white font-Montserrat ${msg.sender === "message" ? "bg-blue-500" : "bg-tone7"} animate-fadeIn`}>
+                {msg.sender === "loading" ? (
+                  <div className="flex items-center">
+                    <span className="loader mr-2"></span> {/* Loader */}
+                    <p>{msg.message}</p>
+                  </div>
+                ) : (
+                  <>
+                    {msg.query && (
+                      <div className="my-3 p-2 rounded-xl bg-textTone1 text-lg">
+                        <strong className="px-2 text-tone5">You :</strong> {msg.query}
                       </div>
-                    </>
-                  )}
-
-                  {msg.createdAt && (
-                    <p className="text-xs py-2 text-gray-400 text-right">
-                      {new Date(msg.createdAt).toLocaleString()}
-                    </p>
-                  )}
-                </div>
+                    )}
+                    <div className="p-4 rounded-b-xl whitespace-pre-wrap">
+                      {msg.message.split(/(```[a-z]*[\s\S]*?```)/g).map((part, i) =>
+                        part.match(/```[a-z]*[\s\S]*?```/) ? (
+                          <pre key={i} className="bg-slate-900 text-white p-2 rounded-lg overflow-x-auto">
+                            <code >{part.replace(/```[a-z]*|```/g, "")}</code>
+                          </pre>
+                        ) : (
+                          part
+                        )
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
-            ))}
-          </div>
-        )}
+            </div>
+          ))}
+        </div>
       </div>
-
-      {/* Loader CSS */}
-      <style jsx>{`
-        .loader {
-          border: 4px solid rgba(255, 255, 255, 0.3);
-          border-top: 4px solid #fff;
-          border-radius: 50%;
-          width: 16px;
-          height: 16px;
-          animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-          0% {
-            transform: rotate(0deg);
-          }
-          100% {
-            transform: rotate(360deg);
-          }
-        }
-
-        .like-btn,
-        .dislike-btn {
-          background: transparent;
-          border: none;
-          cursor: pointer;
-          transition: transform 0.2s, background-color 0.2s;
-        }
-
-        .like-btn:hover {
-          transform: scale(1.2);
-          background-color: rgba(0, 255, 0, 0.1);
-        }
-
-        .dislike-btn:hover {
-          transform: scale(1.2);
-          background-color: rgba(255, 0, 0, 0.1);
-        }
-      `}</style>
     </>
   );
 };

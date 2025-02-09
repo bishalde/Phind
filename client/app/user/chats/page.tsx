@@ -11,16 +11,78 @@ interface Message {
   message: string;
   chatId?: string;
   comment?: string;
-  generationTime?:any;
+  generationTime?: any;
 }
 
 const ChatPage = () => {
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [activeComment, setActiveComment] = useState<number | null>(null);
-  const [modelName, setModelName] = useState("llama3.2:latest"); 
+  const [modelName, setModelName] = useState("llama3.2:1b");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const chatboxRef = useRef<HTMLDivElement | null>(null);
+
+  const formatMessage = (message: string) => {
+    // Split the message into code and non-code parts
+    const parts = message.split(/(```[\s\S]*?```)/g);
+    
+    return parts.map((part, index) => {
+      if (part.startsWith('```')) {
+        // Extract language and code
+        const match = part.match(/```(\w+)?\s*([\s\S]*?)```/);
+        if (!match) return part;
+        
+        const language = match[1] || 'plaintext';
+        const code = match[2];
+        
+        return (
+          <div key={index} className="relative group">
+            <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button 
+                className="bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded"
+                onClick={() => navigator.clipboard.writeText(code)}
+              >
+                Copy
+              </button>
+            </div>
+            <pre className="bg-gray-900 rounded-lg my-4 p-4 overflow-x-auto">
+              <div className="absolute top-0 left-2 text-xs text-gray-500 px-2 py-1">
+                {language}
+              </div>
+              <code className="block pt-6 font-mono text-sm text-blue-300">
+                {code.split('\n').map((line, i) => (
+                  <div key={i} className="relative group/line hover:bg-gray-800">
+                    <span className="inline-block w-8 text-gray-600 select-none">
+                      {i + 1}
+                    </span>
+                    <span className="text-gray-200">
+                      {line || '\n'}
+                    </span>
+                  </div>
+                ))}
+              </code>
+            </pre>
+          </div>
+        );
+      }
+
+      // Handle normal text with potential inline code
+      return (
+        <span key={index} className="whitespace-pre-wrap">
+          {part.split(/(`[^`]+`)/g).map((text, i) => {
+            if (text.startsWith('`') && text.endsWith('`')) {
+              return (
+                <code key={i} className="bg-gray-800 px-1 rounded font-mono text-blue-300">
+                  {text.slice(1, -1)}
+                </code>
+              );
+            }
+            return text;
+          })}
+        </span>
+      );
+    });
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -44,16 +106,15 @@ const ChatPage = () => {
         try {
           setLoading(true);
           const URL = `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_API}/chatWithLLM`;
-          const response = await axios.post(URL, { query: newMessage, uid: getCookie('JWT'), modelName: modelName }); // Include modelName in the request
+          const response = await axios.post(URL, { query: newMessage, uid: getCookie('JWT'), modelName: modelName });
           const llmResponse = response.data.llm_response;
-          console.log(llmResponse)
           const chatId = response.data.chatId;
 
           setMessages((prevMessages) => {
             const updatedMessages = prevMessages.filter(msg => msg.sender !== "loading");
             return [
               ...updatedMessages,
-              { sender: "llm", message: llmResponse, chatId,generationTime:response.data.generationTime },
+              { sender: "llm", message: llmResponse, chatId, generationTime: response.data.generationTime },
             ];
           });
         } catch (error) {
@@ -85,10 +146,10 @@ const ChatPage = () => {
     const URL = `${process.env.NEXT_PUBLIC_LLM_API}/chatcomments?chatId=${chatId}&comment=${comments}`;
     try {
       await axios.get(URL);
-      alert(comments === 1 ? "Liked!" : "Disliked!");
+      toast.success(comments === 1 ? "Liked!" : "Disliked!");
     } catch (error) {
       console.error("Error sending feedback:", error);
-      alert("An error occurred while sending feedback.");
+      toast.error("An error occurred while sending feedback.");
     }
   };
 
@@ -112,10 +173,10 @@ const ChatPage = () => {
         return newMessages;
       });
       setActiveComment(null);
-      alert("Comment submitted successfully!");
+      toast.success("Comment submitted successfully!");
     } catch (error) {
       console.error("Error submitting comment:", error);
-      alert("An error occurred while submitting the comment.");
+      toast.error("An error occurred while submitting the comment.");
     }
   };
 
@@ -129,23 +190,20 @@ const ChatPage = () => {
   return (
     <>
       <div className="chats relative flex flex-col min-h-screen max-h-screen w-full items-center">
-        {/* Model selection dropdown */}
         <div className="absolute top-4 left-4">
           <select
             value={modelName}
             onChange={handleModelChange}
-            className="bg-gray-800 text-white outline-none w-[150px] p-2 rounded-xl cursor-pointer"
+            className="bg-black text-white outline-none w-[150px] p-2 rounded-xl cursor-pointer"
           >
-            <option value="llama3.2:latest" selected>llama3.2-3B</option>
-            <option value="llama3.1:latest">llama3.1-8B</option>
-            <option value="mistral:latest">mistral-7B</option>
+            <option value="llama3.2:1b">llama3.2:1b</option>
           </select>
         </div>
 
         {messages.length === 0 ? (
           <div className="w-full min-h-screen flex flex-col items-center justify-center">
             <h1 className="text-3xl text-white font-Poppins text-center py-2 animate-fadeIn">
-              Welcome to 3GPP Chat
+              Welcome to Phind Chat
             </h1>
             <h2 className="text-2xl text-tone3 font-Poppins animate-fadeInDelay">
               Ask your queries!
@@ -162,7 +220,9 @@ const ChatPage = () => {
                 className={`chat flex ${msg.sender === "llm" ? "justify-start" : "justify-end"}`}
               >
                 <div
-                  className={`message rounded-xl px-4 text-white font-Montserrat ${msg.sender === "message" ? "bg-blue-500" : "bg-tone7"} animate-fadeIn`}
+                  className={`message rounded-xl px-4 text-white font-Montserrat ${
+                    msg.sender === "message" ? "bg-blue-500" : "bg-tone7"
+                  } animate-fadeIn max-w-[80%]`}
                 >
                   {msg.sender === "loading" ? (
                     <div className="flex items-center">
@@ -170,14 +230,8 @@ const ChatPage = () => {
                       <p>{msg.message}</p>
                     </div>
                   ) : (
-                    <div className="p-4 rounded-xl whitespace-pre-wrap">
-                      {msg.message.split(/(<[^>]*>)/g).map((part, index) =>
-                        part.match(/<[^>]*>/) ? (
-                          <strong key={index}>{part}</strong>
-                        ) : (
-                          part
-                        )
-                      )}
+                    <div className="p-4 rounded-xl">
+                      {formatMessage(msg.message)}
                     </div>
                   )}
 
@@ -201,18 +255,16 @@ const ChatPage = () => {
                       >
                         <AiOutlineComment size={20} />
                       </button>
-                   
-                    <p className="text-xs py-2 text-gray-400 text-right">
-                      {msg.generationTime} s
-                    </p>
-            
+                      <p className="text-xs py-2 text-gray-400 text-right">
+                        {msg.generationTime} s
+                      </p>
                     </div>
                   )}
 
                   {activeComment === index && msg.sender === "llm" && (
                     <div className="comment-input mt-2">
                       <textarea
-                        className="w-full p-2 rounded bg-gray-700 text-white"
+                        className="w-full p-2 rounded bg-gray-700 text-black"
                         placeholder="Add a comment..."
                         rows={2}
                       ></textarea>
@@ -261,6 +313,8 @@ const ChatPage = () => {
           </div>
         </form>
       </div>
+
+      <ToastContainer position="bottom-right" />
 
       <style jsx>{`
         .loader {

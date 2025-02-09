@@ -174,7 +174,7 @@ def delete_embedding_model_route(model_id):
 def chat_with_LLM():
     queryData=request.json
     try:
-        response, status_code = chatWithLLM(queryData["uid"],queryData["query"],queryData["modelName"],5)
+        response, status_code = chatWithLLM(queryData["uid"],queryData["query"],queryData["modelName"])
         return jsonify(response), status_code
     except Exception as e:
         print("Error in chat with LLM query",e)
