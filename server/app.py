@@ -9,8 +9,6 @@ from controllers.models.models import add_model,get_models,delete_model
 # from controllers.createEmbeddings.embeddings import createEmbedding,getEmbeddings,searchQuery
 from controllers.embeddingmodel.embeddingmodel import add_embedding_model_data,get_embedding_model_data,delete_embedding_model_data
 from controllers.llmchat.llm import chatWithLLM
-# from controllers.jirachat.jira import chatWithJira
-# from controllers.jirachat.jira1 import chatWithJira,UploadJira
 from controllers.imagechat.imagechat import UploadImage,chatWithImage
 from controllers.urlchat.urlchat import UploadURL,chatWithURL
 
@@ -186,7 +184,7 @@ def chat_with_LLM():
 def chat_with_url():
     queryData=request.json
     try:
-        response, status_code = chatWithURL(queryData["uid"],queryData["query"],queryData["modelName"])
+        response, status_code = chatWithURL(queryData["uid"],queryData["sourceUrl"],queryData["query"],queryData["modelName"])
         return jsonify(response), status_code
     except Exception as e:
         print("Error in Jira query : ",e)
@@ -220,6 +218,7 @@ def upload_URL():
     except Exception as e:
         print("Error in URL Fetching : ",e)
         return jsonify({"error": str(e)}), 500
+
 
 
 @app.route('/files/<filename>')

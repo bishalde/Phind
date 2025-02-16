@@ -1,14 +1,30 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from groq import Groq
+import ollama
 
 # Set page configuration
 st.set_page_config(page_title="Data Q&A Assistant", layout="wide")
 
-# Initialize Groq
-GROQ_API_KEY = "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"
-client = Groq(api_key=GROQ_API_KEY)
+# Custom CSS for background gradient
+st.markdown(
+    """
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #001F3F, #000000);
+            color: white;
+        }
+        .stApp {
+            background: linear-gradient(to bottom right, #001F3F, #000000);
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# Model selection
+model_options = ["llama3.2:1b", "llama3.2:3b"]
+selected_model = st.selectbox("Choose an AI model:", model_options)
 
 def load_data(file):
     try:
@@ -43,37 +59,21 @@ def generate_python_code(question, df_info):
     
     Important: Generate ONLY pure Python code using pandas to answer the question. 
     Do not include any explanations or comments.
-    Do not include backticks or markdown formatting.
-    The code must be directly executable Python code that returns the result.
-    Bad example: ```python\ndf['column'].mean()```
-    Good example: df['column'].mean()
+    The code must be directly executable Python code that returns the result. dont give the print statement, just give the code
     """
     
-    messages = [
-        {"role": "system", "content": system_prompt},
-        {"role": "user", "content": f"Generate code to answer: {question}"}
-    ]
-    
-    response = client.chat.completions.create(
-        messages=messages,
-        model="mixtral-8x7b-32768",
-        temperature=0.3,
-        max_tokens=500
+    response = ollama.chat(
+        model=selected_model,
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": f"Generate code to answer: {question}"}
+        ]
     )
     
-    # Clean the response to ensure we only get the code
-    code = response.choices[0].message.content.strip()
-    # Remove any markdown code blocks if present
+    code = response['message']['content'].strip()
     code = code.replace('```python', '').replace('```', '').strip()
-    # Remove any explanatory text before or after the code
-    code = '\n'.join(line for line in code.split('\n') if not line.startswith('#') and line.strip())
+    print("MAIN CODE",code)
     
-    # Additional cleaning to remove unexpected characters
-    code = code.replace('\\', '').strip()  # Remove any backslashes that might cause issues
-    
-    print(code)
-    
-    # Check if the code is valid Python syntax
     try:
         compile(code, '<string>', 'exec')
     except SyntaxError as e:
@@ -83,88 +83,51 @@ def generate_python_code(question, df_info):
     return code
 
 def execute_code_safely(code, df):
-    """Execute the generated code in a controlled way"""
     if code is None:
         return "Invalid code generated."
     
     try:
-        # Create a local namespace with only the dataframe
         local_ns = {'df': df, 'pd': pd, 'np': np}
-        
-        # Execute the code and capture the result
         exec(f"result = {code}", local_ns)
-        
         return local_ns['result']
     except Exception as e:
-        st.error(f"Error in code execution. Trying alternative approach...")
-        try:
-            # Try executing the code as a sequence of statements
-            lines = code.strip().split('\n')
-            for i in range(len(lines)-1):
-                exec(lines[i], local_ns)
-            # Execute the last line as the result
-            exec(f"result = {lines[-1]}", local_ns)
-            return local_ns['result']
-        except Exception as e2:
-            return f"Error executing code: {str(e2)}"
+        return f"Error executing code: {str(e)}"
 
 def format_result(result):
-    """Format the result for better display"""
     if isinstance(result, pd.DataFrame):
         return result
     elif isinstance(result, pd.Series):
         return result.to_frame()
     elif isinstance(result, (list, tuple, np.ndarray)):
-        if len(result) > 0:
-            if isinstance(result[0], (str, int, float)):
-                return pd.DataFrame({"Values": result})
-            return pd.DataFrame(result)
+        return pd.DataFrame({"Values": result}) if len(result) > 0 else "No data."
     return str(result)
 
 def main():
     st.title("📊 Smart Data Analysis Assistant")
     st.write("Upload your data file and ask questions about it!")
 
-    # File upload
     uploaded_file = st.file_uploader("Upload CSV or Excel file", type=['csv', 'xlsx', 'xls'])
 
     if uploaded_file:
-        # Load the data
         df = load_data(uploaded_file)
         
         if df is not None:
-            # Show data preview
             st.subheader("Data Preview")
             st.dataframe(df.head())
-            
-            # Get dataframe info
             df_info = get_dataframe_info(df)
             
-        
-            # Question input
             question = st.text_area("Enter your question about the data:")
             
             if st.button("Get Answer"):
                 if question:
-                    try:
-                        with st.spinner("Analyzing..."):
-                            # Generate and execute code
-                            code = generate_python_code(question, df_info)
-                            
-                            # For debugging - show generated code
-                            with st.expander("View Generated Code"):
-                                st.code(code, language='python')
-                            
-                            # Execute code and get result
-                            result = execute_code_safely(code, df)
-                            
-                            # Display result
-                            st.subheader("Answer:")
-                            formatted_result = format_result(result)
-                            st.write(formatted_result)
-                            
-                    except Exception as e:
-                        st.error(f"Error: {str(e)}")
+                    with st.spinner("Analyzing..."):
+                        code = generate_python_code(question, df_info)
+                        print("GENERATED",code)
+                        with st.expander("View Generated Code"):
+                            st.code(code, language='python')
+                        result = execute_code_safely(code, df)
+                        st.subheader("Answer:")
+                        st.write(format_result(result))
                 else:
                     st.warning("Please enter a question!")
 

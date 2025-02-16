@@ -30,13 +30,17 @@ faiss_index_file = os.path.join(HTML_UPLOAD_FOLDER, 'faiss_index')
 
 device = f'cuda:{cuda.current_device()}' if cuda.is_available() else 'cpu'
 
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+}
 
 def UploadURL(request):
     try:
         url = [request.json.get('url')] 
-        loader = WebBaseLoader(url)
+        uid = request.json.get('uid')
+        loader = WebBaseLoader(url, header_template=headers)
         documents = loader.load()
-
+        
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=20)
         all_splits = text_splitter.split_documents(documents)
 
@@ -53,7 +57,7 @@ def UploadURL(request):
         # storing embeddings in the vector store
         vectorstore = FAISS.from_documents(all_splits, embeddings)
 
-        faiss_index_file = os.path.join(HTML_UPLOAD_FOLDER, 'faiss_index')
+        faiss_index_file = os.path.join(HTML_UPLOAD_FOLDER, uid)
         vectorstore.save_local(faiss_index_file)
 
         return {"message": "Vector store saved successfully!", "path": faiss_index_file}, 200
@@ -65,12 +69,14 @@ def UploadURL(request):
 
 
 
-def chatWithURL(uid,query,modelName):
+def chatWithURL(uid,sourceUrl,query,modelName):
     try:
         if device !='cpu':
             model_kwargs = {"device": "cuda"}
         else:
             model_kwargs = {"device": "cpu"}
+            
+        faiss_index_file = os.path.join(HTML_UPLOAD_FOLDER, uid)
         
         model_name = "BAAI/bge-small-en-v1.5"
         embeddings = HuggingFaceEmbeddings(model_name=model_name, model_kwargs=model_kwargs)
@@ -98,6 +104,7 @@ def chatWithURL(uid,query,modelName):
             "comments":None,
             "userInput":None,
             "source":"urlchat",
+            "sourceUrl":sourceUrl
         }
         
         # Insert the data into the MongoDB collection
