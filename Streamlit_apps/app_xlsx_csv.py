@@ -23,7 +23,7 @@ st.markdown(
 )
 
 # Model selection
-model_options = ["llama3.2:1b", "llama3.2:3b"]
+model_options = ["qwen2.5:latest","llama3.2:1b", "llama3.2:3b","llama3.1:8b","deepseek-r1:1.5b"]
 selected_model = st.selectbox("Choose an AI model:", model_options)
 
 def load_data(file):
@@ -72,7 +72,6 @@ def generate_python_code(question, df_info):
     
     code = response['message']['content'].strip()
     code = code.replace('```python', '').replace('```', '').strip()
-    print("MAIN CODE",code)
     
     try:
         compile(code, '<string>', 'exec')
@@ -122,7 +121,6 @@ def main():
                 if question:
                     with st.spinner("Analyzing..."):
                         code = generate_python_code(question, df_info)
-                        print("GENERATED",code)
                         with st.expander("View Generated Code"):
                             st.code(code, language='python')
                         result = execute_code_safely(code, df)

@@ -21,9 +21,7 @@ def chatWithLLM(uid,query_text,modelName):
             "source":"llmchat"
         }
         headers = {'Content-Type': 'application/json'}
-        
-        print(api_payload)
-        
+           
         response = requests.post(api_url, data=json.dumps(api_payload), headers=headers)
         
         if response.status_code == 200:

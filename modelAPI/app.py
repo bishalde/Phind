@@ -40,10 +40,16 @@ def chat():
         # Call the LLM model with context and query
         if modelName == 'llama3.2:1b':
             response = ollama.chat(model='llama3.2:1b', messages=messages)
-        # elif modelName == 'llama3.1:latest':
-        #     response = ollama.chat(model='llama3.1:latest', messages=messages)
-        # elif modelName == 'mistral:latest':
-        #     response = ollama.chat(model='mistral:latest', messages=messages)
+        elif modelName == 'llama3.2:3b':
+            response = ollama.chat(model='llama3.2:3b', messages=messages)
+        elif modelName == 'llama3.1:8b':
+            response = ollama.chat(model='llama3.1:8b', messages=messages)
+        elif modelName == 'deepseek-r1:1.5b':
+            response = ollama.chat(model='deepseek-r1:1.5b', messages=messages)
+        elif modelName == 'qwen2.5:1.5b':
+            response = ollama.chat(model='qwen2.5:1.5b', messages=messages)
+        elif modelName == 'qwen2.5:latest':
+            response = ollama.chat(model='qwen2.5:latest', messages=messages)
         else :
             return jsonify({'error': f'Unsupported model: {modelName}'}), 400
 

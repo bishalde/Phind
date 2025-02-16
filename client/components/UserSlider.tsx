@@ -12,7 +12,7 @@ const menus = [
   {name:'XLSX/CSV Chat',path:'/user/xlsxcsvchat'},
   {name:'SQL Chat',path:'/user/sqldbchat'},
   {name:'JSON Chat',path:'/user/jsonchat'},
-  {name:'Video Chat',path:'/user/videochat'},
+  {name:'Video Query Chat',path:'/user/videochat'},
 ]
 
 const profileMenus =[

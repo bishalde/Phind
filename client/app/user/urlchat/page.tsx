@@ -78,7 +78,7 @@ const Page = () => {
       const requestData = {
         query: question,
         uid: getCookie("JWT"),
-        sourceUrl :selectedURL,
+        sourceUrl: selectedURL,
         modelName: modelName,
       };
 
@@ -154,9 +154,10 @@ const Page = () => {
                 className="bg-black text-white outline-none w-[150px] p-2 rounded-xl cursor-pointer"
               >
                 <option value="llama3.2:1b">llama3.2:1b</option>
-                <option value="llama3.2:1b" selected>
-                  llama3.2:1b
-                </option>
+                <option value="llama3.2:3b">llama3.2:3b</option>
+                <option value="llama3.1:8b">llama3.1:8b</option>
+                <option value="deepseek-r1:1.5b">deepseek-r1:1.5b</option>
+                <option value="qwen2.5:1.5b">qwen2.5:1.5b</option>
               </select>
             </div>
             <h1 className="text-3xl my-6 text-white font-Poppins">
@@ -189,10 +190,10 @@ const Page = () => {
                   >
                     📋
                   </button>
-                 <div 
-    className="text-lg font-mono whitespace-pre-line break-words leading-relaxed"
-    dangerouslySetInnerHTML={{ __html: responseData.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/\n/g, "<br />") }} 
-/>
+                  <div
+                    className="text-sm font-mono whitespace-pre-line break-words leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: responseData.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/\n/g, "<br />") }}
+                  />
 
                 </div>
                 <div className="flex justify-end gap-3 py-3">

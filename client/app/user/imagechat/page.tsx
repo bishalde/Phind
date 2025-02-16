@@ -249,9 +249,9 @@ const Page = () => {
                             <select
                                 value={modelName}
                                 onChange={handleModelChange}
-                                className="bg-gray-800 text-white outline-none w-[150px] p-2 rounded-xl cursor-pointer"
+                                className="bg-black text-white outline-none w-[200px] p-2 rounded-xl cursor-pointer"
                             >
-                                <option value="llama-3.2-11b-vision-preview">llama-3.2-11b-vision</option>
+                                <option value="llama-3.2-11b-vision-preview">llama-3.2:11b-vision</option>
                             </select>
                         </div>
                         
@@ -294,7 +294,7 @@ const Page = () => {
                                 <h1 className="text-2xl my-3 text-white font-Poppins">
                                     Response:
                                 </h1>
-                                <pre className="text-sm font-Poppins my-3 text-tone2 bg-gray-800 p-4 rounded-md whitespace-pre-wrap">
+                                <pre className="text-sm text-white font-mono whitespace-pre-line break-words leading-relaxed">
                                     {responseData}
                                 </pre>
                             </>
