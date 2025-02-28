@@ -4,6 +4,7 @@
 declare -A streamlit_files=(
   ["app_xlsx_csv.py"]=8501
   ["app_sql.py"]=8502
+  ["app_docs.py"]=8503
   ["video_chat.py"]=8504
 )
 

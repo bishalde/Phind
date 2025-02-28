@@ -302,7 +302,7 @@ const ChatPage = () => {
               className="noscroll w-full h-full bg-[#2E2E2F] resize-none px-4 p-4 outline-none focus:outline-none"
               name="query"
               id="query"
-              placeholder="Ask Queries to 3GPP Chat"
+              placeholder="Ask Queries to Phind Chat"
               onInput={handleInput}
               ref={textareaRef}
               rows={1}

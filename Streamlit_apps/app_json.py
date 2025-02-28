@@ -11,7 +11,7 @@ from langchain.schema import SystemMessage
 import os
 
 # Hardcoded Groq API key
-os.environ["GROQ_API_KEY"] = "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"
+os.environ["GROQ_API_KEY"] = "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"
 
 # Initialize Groq LLM with specific parameters for JSON analysis
 llm = ChatGroq(

@@ -1,0 +1,606 @@
+ In this video, I will teach you all the main concepts of Docker, including getting your first hands-on experience with it.
+ So, if you have to use Docker at work, or if you need to learn Docker to level up your engineering skills,
+ and need to get started fast and understand all the main concepts and learn basics of how to work with Docker,
+ this crash course is exactly right for you.
+ First, we'll start by explaining what Docker is, why was it even created,
+ basically what problems it solves in engineering, and how it helps in software development and deployment process.
+ So, you will understand exactly why Docker is such a big deal, and why it has become so popular,
+ and widely used in IT projects.
+ And as part of a virtualization solution, Docker being an improvement over virtual machines or the next evolution step,
+ I will also explain the difference between virtual machine and Docker,
+ and what are the advantages of Docker in this comparison.
+ After we've understood why we want to use Docker in the first place,
+ we will install Docker and learn how to actually work with it.
+ We will learn the concepts of Docker images, containers, Docker registry, public and private registries,
+ and we will run containers locally based on some of the images available on Docker's public registry called Docker Hub.
+ We will also learn the concept of creating your own images and learn about a Docker image blueprint called Docker file.
+ And of course, we'll see all this in action and learn all the Docker commands for pulling images,
+ running containers, building your own Docker image, etc.
+ We will also learn about versioning images with image text, and finally, after you've learned how to work with Docker,
+ I will also explain with graphical animations how Docker feeds in the big picture of software development and deployment process.
+ So by the end of this video, you will feel way more confident about your knowledge and understanding Docker,
+ and can easily build on that foundation knowledge to become a Docker power user if you want to.
+ And under the video description, I will provide some resources to learn even more about Docker and become more advanced in it.
+ But before we jump right in, it seems like many of you watching the videos on our channel are still not subscribed.
+ So if you're getting some value out of the free tutorials I put out regularly on this channel,
+ be sure to subscribe, not to miss any future videos or tutorials.
+ I would also be happy to connect with you on my other social media accounts,
+ where I post behind the scenes content, weekly updates, and so on.
+ So hope to connect to you there as well.
+ Well, I am super excited to teach you all this, so let's get into it.
+ Let's start with the most important question.
+ What is Docker? Why was it even created and what problem does it solve?
+ In simple words, Docker is a virtualization software that makes developing and deploying applications very easy,
+ much easier compared to how it was done before Docker was introduced.
+ And Docker does that by packaging an application into something called a container that has everything the application needs to run.
+ Like the application code itself, its libraries and dependencies, but also the runtime and environment configuration.
+ So application and its running environment are both packaged in a single Docker package,
+ which you can easily share and distribute.
+ Now, why is this a big deal and how were applications actually developed and deployed before Docker was introduced?
+ Let's see that to understand the benefits of Docker more clearly.
+ So how did we develop applications before containers?
+ Usually when you have a team of developers working on some application,
+ they would have to install all the services that application depends on or needs like database services, etc,
+ directly on their operating system.
+ Right? For example, if you're developing a JavaScript application and you need a
+ PostgreSQL database, maybe you need a Redis for caching, Mosquito for messaging, like you have a
+ microservice application. Now, you need all these services locally on your development environment,
+ so you can actually develop and test the application. Right?
+ And every developer in the team would then have to go and install all those services,
+ configure and run them on their local development environment, and depending on which operating system
+ they're using, the installation process will be different. Because installing a PostgreSQL database
+ on macOS is different from installing it on a Windows machine, for example.
+ Another thing with installing services directly on operating system,
+ following some installation guide, is that you usually have multiple steps of installation
+ and then configuration of the service. So with multiple commands that you have to execute to
+ install, configure and set up the service, the chances of something going wrong and error happening
+ is actually pretty high. And this approach or this process of setting up a development environment
+ for a developer can actually be pretty tedious depending on how complex your application is.
+ For example, if you have 10 services that your application is using, then you would have to
+ do that installation 10 times for each service. And again, it will differ within the team
+ based on what operating system each developer is using. Now, let's see how containers
+ solve some of these problems. With containers, you actually do not have to install any of the
+ services directly on your operating system. Because with Docker, you have that service packaged
+ in one isolated environment. So you have PostgreSQL with a specific version, packaged with its whole
+ configuration inside of a container. So as a developer, you don't have to go and look for
+ some binaries to download and install on your machine. But rather, you just go ahead and start
+ that service as a Docker container using a single Docker command, which fetches the container
+ package from internet and starts it on your computer. And the Docker command will be the same
+ regardless of which operating system you're on. And it will also be the same regardless of which
+ service you're installing. So if you have 10 services that your JavaScript application depends on,
+ you would just have to run 10 Docker commands for each container and that will lead. So as you see,
+ Docker standardizes the process of running any service on your development environment and makes
+ the whole process much easier. So you can basically focus and work more on development instead of
+ trying to install and configure services on your machine. And this obviously makes setting up your
+ local development environment much faster and easier than the option without containers. Plus,
+ with the Docker, you can even have different versions of the same application running on your
+ local environment without having any conflict, which is very difficult to do if you're installing
+ that same application with different versions directly on your operating system. And we will
+ actually see all of this in action in the demo part of this video. Now let's see how containers
+ can improve the application deployment process. Before containers, a traditional deployment process
+ would look like this. Development team would produce an application artifact or a package
+ together with a set of instructions of how to actually install and configure that application
+ package on the server. So you would have something like a jar file for Java application or something
+ similar depending on the programming language used. And in addition, of course, you would have some
+ kind of database service or some other services that your application needed. Also, with a set of
+ instructions of how to configure and set it up on the server so that application could connect to it
+ and use it. So development team would give that application artifact or package over to the
+ operations team. And the operations team would handle installing and configuring the application
+ and all its tenant services like database, for example. Now, the problem with this kind of approach
+ is that first of all, you need to configure everything and install everything
+ again directly on the operating system, which I mentioned in the development context that is
+ actually very error prone and you can have various different problems during the setup process.
+ You can also have conflicts with dependency versions where two services are depending on the same
+ library, for example, but with different versions. And when that happens, it's going to make the
+ setup process way more difficult and complex. So basically, a lot of things that can go wrong when
+ operations team is installing and setting up application and its services on a server.
+ Another problem that could arise from this kind of process is when there is a miscommunication
+ between the development team and operations team. Because since everything is in a textual guide,
+ like an instruction list of how to configure and run the application or maybe some kind of checklist,
+ there could be cases where developers forget to mention some important step about configuration.
+ And when that part fails, the operations team have to go back to developers and ask for more details
+ and input. And this could lead to some back and forth communication until the application is
+ successfully deployed on the server. So basically, you have this additional communication overhead
+ where developers have to communicate in some kind of textual, graphical, whatever format,
+ how the application should run. And as I mentioned, this could lead to issues and miscommunications.
+ With containers, this process is actually simplified because now developers create an application
+ package that doesn't only include the code itself, but also all the dependencies and the
+ configuration for the application. So instead of having to write that in some textual format and
+ document, they basically just package all of that inside the application artifact. And since it's
+ already encapsulated in one environment, the operations people don't have to configure any of
+ this stuff directly on the server. So it makes the whole process way easier and there is less room
+ for issues that I mentioned previously. So the only thing now that operations team need to do in
+ this case is to run a Docker command that gets the container package that developers created and
+ runs it on the server. The same way operations team will run any services that application needs
+ also as Docker containers. And that makes the deployment process way easier on the operations side.
+ Now of course, the operations team will have to install and set up the Docker runtime
+ on the server before they will be able to run containers. But that's just one time effort
+ for one service or one technology. And once you have Docker runtime installed, you can simply run
+ Docker containers on the server. Now at the beginning, I mentioned that Docker is a virtualization
+ tool, just like a virtual machine. And virtual machines have been around for a long time. So why did
+ Docker become so widely adopted? What advantages it has over virtual machines and what is the
+ difference between the two? For that, we need to see a little bit of how Docker works on a technical
+ level. I also said that with Docker, you don't need to install services directly on operating system.
+ But in that case, how does Docker run its containers on an operating system? Now in order to understand
+ all this, let's first look at how an operating system is made up. Operating systems have two main
+ layers. You have the operating system kernel and the operating system applications layer. And kernel
+ is the part that communicates with the hardware components like CPU memory storage, etc. So when
+ you have a physical machine with all these resources and you install operating system on that
+ physical machine, the kernel of the operating system will actually be the one talking to the
+ hardware components to allocate resources like CPU memory storage, etc. to the applications
+ than running on that operating system. And those applications are part of the applications layer
+ and they run on top of the kernel layer. So kernel is kind of a middleman between the applications
+ that you see when you interact with your computer and the underlying hardware of your computer.
+ And now since Docker and virtual machine are both virtualization tools, the question is what part
+ of the operating system they actually virtualize? And that's where the main difference between
+ Docker and virtual machines actually lie. So Docker virtualizes the applications layer. This means
+ when you run a Docker container, it actually contains the applications layer of the operating system
+ and some other applications installed on top of that application layer. It could be a Java runtime
+ or Python or whatever and it uses the kernel of the host because it doesn't have its own kernel.
+ The virtual machine on the other hand has the applications layer and its own kernel. So it
+ virtualizes the complete operating system, which means that when you download a virtual machine
+ image on your host, it doesn't use the host's kernel, it actually boots up its own. So what does
+ this difference between Docker and virtual machine actually mean? First of all, the size of the
+ Docker packages or images are much smaller because they just have to implement one layer of the
+ operating system. So Docker images are usually a couple of megabytes large. Virtual machine images
+ on the other hand can be a couple of gigabytes. This means when working with Docker, you actually
+ save a lot of disk space. You can run and start Docker containers much faster than virtual machines
+ because virtual machine has to boot up a kernel every time it starts. While Docker container
+ just reuses the host kernel and it just starts the application layer on top of it. So while virtual
+ machine needs a couple of minutes to start up, Docker containers usually start up in a few milliseconds.
+ The third difference is compatibility. So you can run virtual image of any operating system
+ on any other operating system host. So on a Windows machine, you can run a Linux virtual machine,
+ for example, but you can't do that with Docker at least not directly. So what is the problem here?
+ Let's say you have a Windows operating system with Windows kernel and its application layer.
+ And you want to run a Linux based Docker image directly on that Windows host. The problem here
+ is that Linux based Docker image cannot use the Windows kernel. It would need a Linux kernel to run
+ because you can run a Linux application layer on a Windows kernel. So that's kind of an issue with Docker.
+ However, when you're developing on Windows or macOS, you want to run various services
+ because most containers for the popular services are actually Linux based.
+ Also interesting to note that Docker was originally written and built for Linux. But later,
+ Docker actually made an update and developed what's called Docker desktop for Windows and Mac,
+ which made it possible to run Linux based containers on Windows and Mac computers as well.
+ So the way it works is that Docker desktop uses a hypervisor layer with a lightweight Linux
+ distribution on top of it to provide the needed Linux kernel. And this way make running
+ Linux based containers possible on Windows and Mac operating systems. And by the way, if you want
+ to understand more about virtualization and how virtual machines work and what a hypervisor, for
+ example, is you can watch my other video where I explain all of that in detail. So this means
+ for local development, as an engineer, you would install Docker desktop on your Windows or MacOS
+ computer to run Linux based images, which as I mentioned, most of the popular services databases,
+ etc are mostly Linux based. So you would need that. And that brings us to the installation of Docker.
+ In order to do some demos and learn Docker in practice, you would first need to install it.
+ So in order to install Docker, you just go to their official page for installation guide
+ and follow the steps. Because Docker gets updated all the time. The installation changes,
+ which so instead of me just giving you some commands that may work now, but we'll get updated in
+ the future, which should always refer to the latest documentation for installation guide for any tool.
+ So if we search for Docker desktop installation and click on one of those links, I can install on
+ Windows. So that's the Docker desktop. The tool that I mentioned that solve this problem of running
+ Linux based images on a different operating system, but it actually includes a lot of other things
+ when you install it. So what are you exactly installing with Docker desktop? And you see exactly
+ what's included in there. So basically get the Docker service itself. It's called Docker Engine.
+ That's the main part of the Docker that makes this virtualization possible. But when we have a service,
+ we need to communicate with that, right? So we need a client that can talk to that service.
+ So Docker desktop actually comes with a command line interface client, which means we can execute
+ Docker commands on a command line to start containers, to create containers, start stop them,
+ remove them, etc. and do all kinds of things. And it also comes with a graphical user interface client.
+ So if you're not comfortable working with command line, you can actually use the graphical
+ user interface where you can do all these things, but in a nice user-friendly UI. So you get all
+ these things when you install Docker desktop, basically everything that you need to get started with
+ Docker. And of course, depending on which operating system you're on, you're going to choose that one,
+ Mac Windows or Linux. So let's click on one of those and you basically just follow the instructions.
+ You have some system requirements. You have to check things like the version of your Mac OS,
+ how much resources you're going to need. And you also have the options for Mac with Intel,
+ or Mac with Apple Silicon. So you can toggle between those. And basically just choose the
+ guide that matches your computer specifications. And once you have that, check the system requirements,
+ go ahead and click on one of those. In my case, I have Mac with Intel chip. So I would click on
+ this one and that's actually the Docker desktop installer. So if I click, it's going to download
+ this DMG image. And once it's downloaded, you basically just follow the steps described here.
+ Double-click on it, open the application, and so on. And same for Windows, if your Windows,
+ you basically click on this one and download Docker desktop for Windows. And make sure to check
+ the system requirements and kind of prepare everything you need for starting Docker.
+ Generally for latest versions of Windows, Mac, or whatever operating system, it should be pretty
+ easy and straightforward to install Docker. So go ahead and do that. Once you're done with installation,
+ you can simply start the service by searching Docker. And if I click on it, you will see right here
+ that it's actually starting up Docker service for Docker Engine. And there you go.
+ It's running. And this view here that you're seeing, this window is actually the graphical user
+ interface of Docker that I mentioned. So that's the client that you can use to interact with the
+ Docker Engine. So you have a list of containers running currently. So there's no list. Same with images,
+ if I switch to images, I have cleaned up my environment. So I'm starting with Scratch with empty
+ state just like you. So we're ready to start using Docker. But first, you may be wondering what are
+ images. And that's what I'm going to explain next, because it's a very important concept in Docker.
+ Now, I mentioned that Docker allows to package the application with its environment configuration
+ in this package that you can share and distribute easily. So just like an application artifact file,
+ like when we create a zip or tar file or a jar file, which you can upload to a artifact storage,
+ and then download on the server or locally whenever you need it. And then package or artifact that
+ we produce with Docker is called a Docker image. So it's basically an application artifact. But
+ different from jar file or from other application artifacts, it not only has the compile application
+ code inside, but additionally has information about the environment configuration. It has the
+ operating system application layer, as I mentioned, plus the tools like node NPM or Java runtime
+ installed on that, depending on what programming language your application was written in. For
+ example, if you have a JavaScript application, you would need node JS and NPM to run your application,
+ so in the Docker image, you would actually have node NPM installed already. You can also add
+ environment variables that your application needs, for example. You can create directories,
+ you can create files or any other environment configuration, whatever you need around your
+ application. So all of that information is packaged in the Docker image together with the application
+ and that's the great advantage of Docker that we talked about. And as I said, the package is
+ called an image. So if that's an image, what is the container then? Well, we need to start that
+ application package somewhere, right? So when we take that package or image and download it to
+ server or your local computer laptop, we want to run it on that computer. The application has to
+ actually run. And when we run that image on an operating system and the application inside
+ starts in the pre-configured environment, that gives us a container. So a running instance of an
+ image is a container. So a container is basically a running instance of an image. And from the same
+ image, from one image, you can run multiple containers, which is a legitimate use case if you need to
+ run multiple instances of the same application for increased performance, for example. And that's
+ exactly what we were seeing here. So we have the images. These are the application packages, basically,
+ and then from those images, we can start containers, which we will see listed right here, which are
+ running instances of those images. And I also said that in addition to the graphical user interface,
+ we get a command line interface client, Docker client that can talk to Docker Engine. And since we
+ installed Docker Desktop, we should have that Docker CLI also available locally. Which means if you
+ open your terminal, you should be able to execute Docker commands. And Docker commands we can do
+ anything. For example, we can check what images we have available locally. So if I do Docker images,
+ that will give me a list of images that I have locally, which in this case, I don't have any,
+ which we saw in the graphical user interface. And I can also check the containers using a command Docker
+ PS. And again, I don't have any running containers yet. Now, before moving on, I want to give a
+ shout out to Nethopper. Nethopper's cloud platform called Kubernetes application operations offers
+ an easy way for DevOps teams to deliver, manage, upgrade, connect, secure, and monitor applications
+ in one or more Kubernetes clusters. With this platform, they basically create this virtual network
+ layer that connects multiple environments. For example, if you have multiple cloud platforms and
+ multiple Kubernetes clusters, even your own on-premise data center, where application gets deployed,
+ you can connect all these in one virtual network. So you can deploy and operate your Kubernetes
+ workloads as if it was in one cluster or one infrastructure environment. And the GitHub
+ Centric approach they use offers the visibility to know who did what and when for both your
+ infrastructure and application. So with Nethopper, enterprises can automate their operations and instead
+ of building an own platform, DevOps teams can focus on what matters the most, which is releasing
+ more application features faster. So check them out. You can actually sign up for a free account
+ and take it for a spin to see if Nethopper is the right solution for you.
+ Now, it's clear that we get containers by running images. But how do we get images to run containers
+ from? Let's say we want to run a database container or ready or some log collector service container.
+ How do we get their Docker images? Well, that's where Docker registries come in. So there are
+ ready Docker images available online in an image storage or registry. So basically, this is a
+ storage specifically for Docker image type of artifacts. And usually the company is developing
+ those services like Redis, MongoDB, etc. as well as Docker community itself will create what's
+ called official images. So you know, this MongoDB image was actually created by MongoDB itself or
+ the Docker community. So you know, it's an official verified image from Docker itself. And Docker itself
+ offers the biggest Docker registry called Docker Hub where you can find any of these official
+ images and many other images that different companies or individual developers have created and
+ uploaded there. So if we search for Docker Hub, right here you see Docker Hub Container Image Library.
+ And that's how it looks like. And you don't actually have to register or sign up on Docker Hub
+ to find those official images. So anyone can go on this website and basically browse the container
+ images. And here in search bar, you can type any service that you're looking for. For example,
+ Redis that I mentioned. And if I hit enter, you will basically see a list of various
+ redis related images as well as the ready service itself as a Docker image. And here you have this
+ badge or label that says Docker official image. So example, for the Redis image that we are going to
+ choose here, you see that it is actually maintained by Docker community. The way it works is that Docker
+ has a dedicated team that is responsible for reviewing and publishing all content in the Docker
+ official images. And this team works in the collaboration with the technology creators or
+ maintainers as well as security experts to create and manage those official Docker images.
+ So this way it is ensured that not only the technology creators are involved in the
+ official image creation, but also all the Docker security best practices and production best
+ practices are also considered in the image creation. And that's basically the description page
+ with all the information about how to use this Docker image, what it includes, etc.
+ And again, as I said, Docker Hub is the largest Docker image registry. So you can find images for
+ any service that you want to use on Docker Hub. Now, of course, technology changes and there are
+ updates to applications, those technologies. So you have a new version of Redis or MongoDB.
+ And in that case, a new Docker image will be created. So images are versioned as well.
+ And these are called image tags. And on the page of each image, you actually have the list of
+ versions or tags of that image listed right here. So this is for Redis. And if I search for
+ Postgres, for example, you will see different image tags for Postgres image also listed here.
+ So when you're using a technology and you need a specific version, you can choose
+ a Docker image that has that version of the technology. And there is a special tag that all images
+ have called latest. So right here, you see this latest tag or here as well in the recent tags. So
+ latest tag is basically the latest, the last image that was built. So if you don't specify or
+ choose a version explicitly, you basically get the latest image from the Docker Hub.
+ So now we've seen what images are and where you can get them. So now the question is how do we
+ actually get the image from Docker Hub and download it locally on our computer so we can start a
+ container from that image. So first, we locate the image that want to run as a container locally.
+ For our demo, I'm going to use an engine X image. So go ahead and search for engine X,
+ which is basically a simple web server and it has a UI. So we'll be able to access our container
+ from the browser to validate the container has started successfully. That's why I'm choosing
+ engine X. And here you have a bunch of image tags that you can choose from. So the second step
+ after locating the image is to pick a specific image tag and note that selecting a specific
+ version of image is the best practice in most cases. And let's say we choose version 1.23. So we're
+ choosing this tag right here. And to download an image, we go back to our terminal and we execute
+ Docker pull command and we specify the name of the image, which is engine X. So you have that
+ whole command here as well. So that's basically the name of the image that you have written here.
+ So that's engine X. And then we specify the image tag by separating it with a call it. And then
+ the version 1.23. That's what we chose. That's the whole command. So Docker client will contact
+ Docker Hub and we'll say I want to grab the engine X image with this specific tag and download it
+ locally. So let's execute. And here we see that it's pulling the image from the image registry.
+ So Docker Hub and the reason why we don't have to tell Docker to find that image on Docker Hub is
+ because Docker Hub is actually the default location where Docker will look for any images that we
+ specify right here. So it's automatically configured as a location for downloading the images from.
+ And the download happened. And now if we execute Docker images command again, as we did here,
+ we should actually see one image now locally, which is engine X with an image tag 1.23.
+ And some other information like the size of the image, which is usually in megabytes,
+ as I mentioned. So we have an image now locally. And if we pull an image without any specific tag.
+ So we do this basically. Docker pull name of the image. In fact, you can this. You see that it is
+ pulling the latest image automatically. And now if I do Docker images again, we're going to see
+ two images of engine X with two different tags, right. So these are actually two separate images
+ with different versions. Cool. Now we have images locally, but obviously they're only useful when we
+ run them in a container environment. How can we do that? Also super easy. We pick the image. We already
+ have available locally with the tag. So let's say we want to run this image as a container.
+ And we execute Docker run command and with the name of the image and the tag. Super easy.
+ And let's execute. And that command actually starts the container based on the image.
+ And we know the container started because we see the logs of engine X service starting up
+ inside the container. So these are actually container logs that we see in the console.
+ So it's launching a couple of scripts. And right here we have start worker processes.
+ And the container is running. So now if I open a new terminal session like this. And do Docker PS.
+ I should actually see one container. This one here in the running container list.
+ And we have some information about the container. We have the ID. We have the image that the container
+ is based on including the tag when it was created. And also the name of the container. So we have the
+ ID and name of the container. This is the name which Docker actually automatically generates
+ any signs to a container when it's created. So it's some random generic name.
+ Now if I go back here, you see that these logs, container logs actually are blocking the terminal.
+ So if I want to get the terminal back and do control C exit, the container exits and the process
+ actually dies. So now if I do Docker PS, you will see that there is no container running.
+ But we can start a container in the background without it blocking the terminal by adding
+ a flag called minus D, which stands for detached. So it detaches the Docker process from terminal.
+ If I execute this, you see that it's not blocking the terminal anymore. And instead of showing
+ the logs from ngx, starting up inside the container, it just logs out the full ID of the container.
+ So now if I do Docker PS here in the same terminal, I should see that container running again.
+ And that's basically the ID or the part of this full ID string shown here. But when we start a
+ container in the background in a detached mode, you may still want to see the application logs inside
+ the container. So you may want to see how did ngx start up, what did it log actually. So for that,
+ you can use another Docker command called Docker logs with the container ID like this.
+ And it will print out the application logs from the container. Now in order to create the container,
+ ngx container, we first pull the image and then we created a container from that image. But
+ we can actually save ourselves the pull command and execute run command directly, even if the
+ image is not available locally. So right now we have these two images available locally. But in the
+ Docker run command, you can actually provide any image that exists on Docker Hub. It doesn't
+ necessarily have to exist locally on your computer. So you don't have to pull that first. So if I go
+ back, we can actually choose a different image version. Let's choose 1.22-L pine. So
+ this image tag, which we don't have locally, or of course this can be completely different
+ service. It doesn't matter. So basically any image that we don't have locally, you can run directly
+ using Docker run command. So what it does is first, it will try to locate that image locally.
+ And if it doesn't find it, it will go to Docker Hub by default and pull the image from there
+ automatically, which is very convenient. So it does both in one command basically. So it downloaded
+ the image with this tag and started the container. And now if we do Docker PS, we should have two
+ containers running with different ngx versions. And remember, I said Docker solves the problem of
+ running different versions of the same application at once. So that's how simple it is to do that with
+ Docker. So we can actually quit this container. And now again, we have that one ngx container with this
+ version. Now the important question is, how do we access this container? Well, we can't write now,
+ because the container is running in the closed Docker network. So we can't access it from our local
+ computer browser, for example. We need to first expose the container to our local network,
+ which may sound a little bit difficult, but it's super easy. So basically we're going to do what's
+ called a port binding. The container is running on some port, right? And each application has some
+ standard port on which it's running, like engine x application always runs on port 80. Ready,
+ runs on port 6,379. So these are standard ports for these applications. So that's the port
+ where container is running on. And for engine x, we see the ports under the list of ports here,
+ application is running on port 80 inside the container. So now if I try to access engine x
+ container on this port on port 80 from the browser. And let's try to do that for 80 and hit enter.
+ You see that nothing is available on this port on local host. So now we can tell Docker,
+ hey, you know what, bind that container port 80 to our local host on any port that I tell you,
+ on some specific port like 8080 or 9000. It doesn't actually matter so that I can access the container,
+ whatever is running inside the container, as if it was running on my local host port 9000.
+ And we do that with an additional flag when creating a Docker container. So what we're going to do
+ is first we're going to stop this container and create a new one. So we're going to do Docker
+ stop which basically stops this running container. And we're going to create a new container.
+ So we're going to do Docker run engine x the same version and we're going to run it in the
+ background in detach mode. Now we're going to do the port binding with an additional flag minus
+ p. And it's super easy. We're telling Docker the engine x application port inside container which
+ is 80. Please take that and find that on a host local host on port whatever 9000 for example, right?
+ That's the port I'm choosing. So this flag here will actually expose the container to our local
+ network or local host. So these engine x process running in container will be accessible for us
+ on port 9000. So now if I execute this, let's see that container is running. And from the port section,
+ we see a different value. So instead of just having 80, we have this port binding information.
+ So if you forgot which port you chose or if you have 10 different containers with Docker PS,
+ you can actually see on which port each container is accessible on your local host. So this will be
+ the port. So now if I go back to the browser and instead of local host 80, we're going to type in
+ local host 9000 and hit enter. There you go. We have the welcome to engine x page. So it means we are
+ actually accessing our application. And we can see that in the logs as well, Docker logs,
+ container ID. And there you go. This is the log that engine x application produced that it got a
+ request from Mac or macOS machine Chrome browser. So we see that our request actually reached
+ the engine x application running inside the container. So that's how easy it is to run a service
+ inside container and then access it locally. Now as I said, you can choose whatever port you want,
+ but it's also pretty much a standard to use the same port on your host machine as the container
+ is using. So if I was running a MySQL container, which started at port 3306, I would bind it on local
+ host 3306. So that's kind of a standard.
+ Now there's one thing I want to point out here, which is that Docker run command actually creates a
+ new container every time. It doesn't reuse the container that we created previously, which means
+ since we executed Docker run command a couple of times already, we should actually have multiple
+ containers on our laptop. However, if I do Docker PS, I only see the running container. I don't see
+ the ones that I created, but stopped, but those containers actually still exist. So if I do Docker PS
+ with a flag A and execute, this gives you actually a list of all containers, whether they are running
+ or stopped. So this is the active container that is still running and these ones are the stopped ones.
+ It even says, Exit it 10 minutes ago, six minutes ago, whatever. So we have four containers with
+ different configuration. And previously, I showed you Docker stop command, which basically stops
+ and actively running container. So we can stop this one. And now it will show it as a stopped
+ container as well, Exit it one second ago. But the same way, you can also restart a container that
+ you created before without having to create a new one with Docker run command. So with that, we have
+ Docker start. And that takes the ID of the container and starts the container again. And again,
+ you can start multiple containers at once if you want, like this. And now you have two containers
+ running. Now you saw that we use ID of the container in various Docker commands. So to stop the
+ container, to restart it, to check the logs, et cetera. But ID is hard to remember and you will
+ have to look it up all the time. So as an alternative, you can also use container name for all these
+ commands instead of the ID, which gets auto generated by Docker. But we can actually rewrite that
+ and we can give our containers a more meaningful names when we create them.
+ So we can stop those two containers using the ID or the name, like this. So these are two different
+ containers, one with ID, one with name, and we're going to stop both of them. There you go. Now when
+ we create a new container, we can actually give it a specific name. And there is another flag for that,
+ which is dash dash name. And then we provide the name that we want to give our container. Let's say
+ this is a web app. So that's what we're going to call our container. And let's execute. If I do
+ Docker PS, you see that the name is not some auto generated random thing, but instead our container
+ is called web app. So now we can do Docker logs and name of our container, like this.
+ Now we've learned about Docker Hub, which is actually what's called a public image registry,
+ which means those images that we used are visible and available for public. But when a company
+ creates their own images of their own applications, of course, they don't want it to be available
+ publicly. So for that, there are what's called private Docker registries and there are many of them.
+ Almost all cloud providers have a service for private Docker registry. For example, AWS is
+ ECR or elastic container registry service, Google, Azure, they all have their own Docker registries.
+ Nexus, which is a popular artifact storage service has Docker registry. Even Docker Hub has a
+ private Docker registry. So on the landing page of Docker Hub, you saw this get started for. So
+ basically if you want to store your private Docker images on Docker Hub, you can actually create a
+ private registry on Docker Hub or even create a public registry and upload your images there.
+ So that's why I actually have an account because I have uploaded a couple of images on Docker Hub.
+ That my students can download for different courses. And there is one more concept I want to
+ mention related to registry, which is something called a repository, which you also often hear,
+ Docker repository, Docker registry. So what is the difference between them? Very simply explained
+ AWS, ECR is a registry. So basically that's a service that provides storage for images. And inside
+ that registry, you can have multiple repositories for all your different application images. So each
+ application gets its own repository. And in that repository, you can store different image versions
+ or tags of that same application. The same way Docker Hub is a registry, it's a service for storing
+ images. And on Docker Hub, you can have your public repositories for storing images that will be
+ accessible publicly or you can have private repositories for different applications. And again,
+ you can have repository dedicated for each application. So that's a side note there. If you hear these
+ terms and concepts and you know what is the difference between them.
+ Now I mentioned that companies would want to create their own custom images for their applications.
+ So how does that actually work? How can I create my own Docker image for my application? And the
+ use case for that is when I'm done with development, the application is ready. It has some features
+ and we want to release it to the end users. So we want to run it on a deployment server.
+ And to make the deployment process easier, want to deploy our application as a Docker container.
+ Along with the database and other services that are also going to run as Docker containers.
+ So how can we take our created deployed application code and package it into a Docker image?
+ For that, we need to create a definition of how to build an image from our application.
+ And that definition is written in a file called Docker file. So that's how it should be called.
+ Creating a simple Docker file is very easy. And in this part, we're going to take a super simple
+ Node.js application that I prepared. And we're going to write a Docker file for that application
+ to create a Docker image out of it. And as I said, it's very easy to do. So this is the application.
+ It is extremely simple. I just have one server.js file, which basically just starts the application
+ on port 3000. And then it just says, welcome when you access it from the browser. And we have one
+ package of JSON file, which contains this dependency for the express library that we use here to start
+ the application. Super lean and simple. And that's the application from which we're going to create
+ a Docker image and start it as a Docker container. So let's go ahead and do that.
+ So in the root of the application, we're going to create a new file called Docker file.
+ So that's the name. And you see that most code editors actually detect Docker file and we get
+ this Docker icon here. So in this Docker file, we're going to write a definition of how the image
+ should be built from this application. So what does our application need? It needs a Node install
+ because Node should run our application, right? So if I wanted to start this application,
+ locally, my terminal, I would execute Node as Rc, source folder, and server.js command to start
+ the application. So we need that Node command available inside the image. And that's where the
+ concept of base image comes in. So each Docker image is actually based on this base image,
+ which is mostly a lightweight Linux operating system image that has the Node NPM or whatever tool
+ you need for your application installed on top of it. So for a JavaScript application, you would have
+ Node base image. If you have Java application, we will use an image that has Java runtime installed.
+ Again, Linux operating system with Java installed on top of it. And that's the base image.
+ And we define that base image using a directive in Docker file called from. We're saying
+ build this image from the base image. And if I go back to Docker Hub and search for Node,
+ you'll see that we have an image, which has Node and NPM installed inside. And base images
+ are just like other images. So basically you can pile and build on top of the images in Docker.
+ So they're just like any other image that we saw. And they also have text or image versions.
+ So we're going to choose Node image and a specific version. And that's actually go for 19-L pine.
+ So that's our base image and our first directive in the Docker file. So again,
+ this will just make sure that when our Node.js application starts in a container,
+ it will have Node and NPM commands available inside to run our application. Now if we start our
+ application with this command, we will see that we get an error because we need to first install
+ dependencies of an application. We just have one dependency, which is press library, which means
+ we would have to execute NPM install command, which will check the package.js file, read all the
+ dependencies, define inside and install them locally in Node modules folder. So basically we're
+ mapping the same thing that we would do to run the application locally. We're making that inside
+ the container. So we would have to run NPM install command also inside the container. So as I mentioned
+ most of the Docker images are Linux based. L pine is a Linux lightweight Linux operating system
+ distribution. So in Docker file, you can write any Linux commands that you want to execute inside
+ the container. And whenever we want to run any command inside the container, whether it's a
+ Linux command or Node command NPM command, whatever, we executed using a run directive. So that's another
+ directive and you see that directives are written in all caps and then comes the command. So NPM
+ install, which will download dependencies inside the container and create a Node modules folder inside
+ the container before the application gets started. So again, think of a container as its own isolated
+ environment. It has a simple Linux operating system with Node and NPM installed and we're executing
+ NPM install. However, we need application code inside the container as well, right? So we need
+ the server.js inside and we need the package to Jason because that's what NPM command will need
+ to actually read the dependencies. And that's another directive where we take the files from
+ our local computer and we paste them, copy them into the container. And that's a directive called
+ copy and you can copy individual files like package.json from here into the container. And we can
+ say we're in container on which location in the file system it should be copied to. And let's say
+ it should be copied into a folder called slash app inside the container. So this is on our machine,
+ right? We have package.json here. This is inside the container. It's a completely isolated system
+ from our local environment. So we can copy individual files and we can also copy the complete
+ directories. So we also need our application code inside obviously to run the application. So we
+ can copy this whole source directory. So we have multiple files inside. We can copy the whole
+ directory into the container again in slash app location. And this slash at the end is also very
+ important. So the darker nodes to create this folder if it doesn't exist in the container yet.
+ So the root of Linux file system app folder inside and then slash. So now all the relevant
+ application files like package.json and the whole source directory are copied into the container
+ on this location. The next thing we want to do before we can execute npm install command is
+ to actually change into that directory, right? So in Linux we have this CD, right, to change into
+ a directory in order to execute the following commands inside the directory. In Docker file we have
+ a directive for that called work deer. So working directory which is an equivalent of changing into
+ directory to execute all the following commands in that directory. So we can do slash app here.
+ So it sets this path as the default location for whatever comes afterwards. Okay, so we're copying
+ everything into the container. Then we are setting the working directory of the default directory
+ inside the container. And then we're executing npm install again within the container to download all
+ the dependencies that application needs that are defined here. And finally we need to run the
+ application, right? So after npm install the node command should be executed. And we learn to
+ execute commands. We use the run directive. However, if this is the last command in the Docker file,
+ so something that actually starts the process itself the application inside we have a different
+ directive for that called CMD. So that's basically the last command in the Docker file and that starts
+ the application. The syntax for that is the command which is node and the parameter gserver.js.
+ So we copied everything into slash app. So we have the server js inside the app directory and we're
+ starting it or running it using node command. That's it. That is the complete Docker file which will
+ create a Docker image for our node js application which we can then start as a container.
+ So now we have the definition in Docker file. It's time to actually build the image from this
+ definition. I'm going to clean this up and without changing to the terminal we can actually reuse
+ this one. We can execute a Docker command to build a Docker image. It's super easy. We just do
+ Docker build. Then we have couple of options that we can provide. The first one is the name of
+ the image. So just like all those images have names, right? Like node, release, etc. and the text.
+ We can also name our image and give it some specific text. And we do that using this
+ dash t option. And we can call our application node app. Maybe we dash, it doesn't matter. And we can
+ give it a specific tag like 1.0 for example. And the last parameter is the location of Docker file.
+ So we're telling Docker build an image with this name, with this tag from the definition in this
+ specific Docker file. So this is a location of Docker file. In this case, we are in the directory
+ where Docker file is located. So it's going to be the current directory. So this dot basically
+ refers to the current folder where Docker file is located. So now if we execute this, as you see,
+ Docker is actually building the image from our Docker file. And it looks like it succeeded. Where
+ it started building the image, you see those steps, those directives that we defined here. So we
+ have the first one from directive got executed. Then we have the copy as a second step. Then we have
+ copy the source folder, setting work directory and running npm install. And then the last one
+ just started the application. So now if I do Docker images, in addition to those nginx images,
+ downloaded previously from Docker hub, we should actually see the image that we just created. This is
+ the node app image with tag 1.0 and some other information. So that's our image. And now we can start
+ this image and work with it just like we work with any other image downloaded from Docker hub.
+ So we're going to go ahead and run container from this node app image and make sure the application
+ inside is actually working. So we're going to do Docker run node app image with 1.0 tag.
+ And we're going to pass in parameter to start in detach mode. And also we want to expose the port.
+ Right. We want to be able to access the application, the node application from local host.
+ And we know that the application inside the container will start on port 3000 because that's
+ what we have defined here. So the application itself will be running on port 3000. So that's inside
+ container. And we can bind it to whatever port we want on local host. And we can do 3000 the same
+ as in the container. So this is the host port and this is container port. And now if I execute
+ is command and do Docker PS we should see our node app running on port 3000. And now the moment of
+ truth going back to the browser and opening local host 3000 there is our welcome to my awesome app
+ message from our application. And we can even check the logs by grabbing the ID of our node app
+ and doing Docker logs with the ID. And that's the output of our application inside the container.
+ So that's how easy it is to take your application package it into a Docker image using Docker file
+ and then run it as a container. And finally going back to this graphically user interface client
+ that Docker desktop actually provides us with. Now we are able to see all our containers and images
+ here as well. And that's how this UI actually looks like. It gives you a pretty good overview
+ of what containers you have, which ones are currently running, which ones are stopped with their names
+ and so on. And you can have some controls here to start a stopped container like this or even stop it
+ again restart container deleted whatever. And the same way you have at least of images including
+ our own image. And you can also create containers directly from here using some controls. So I
+ personally prefer the command line interface to interact with Docker. But some feel more comfortable
+ using the visual UI. So whichever you prefer you can actually choose to work with either.
+ Now we've learned a lot of basic building blocks of Docker. However it's also interesting to see
+ how Docker actually fits in in the complete software development and deployment process with lots
+ of other technologies as well. So in which steps throughout this whole process is Docker relevant.
+ So in this final part of the crash course we're going to see Docker in big picture view of software
+ development lifecycle. So let's consider a simplified scenario where you're developing a JavaScript
+ application on your laptop right on your local development environment. Your JavaScript application
+ uses a MongoDB database. And instead of installing it on your laptop you download a Docker
+ container from the Docker Hub. So you connect your JavaScript application with the MongoDB and you
+ start developing. So now let's say you develop the application first version of the application
+ locally and now you want to test it or you want to deploy it on the development environment where
+ a tester in your team is going to test it. So you commit your JavaScript application in Git or
+ in some other version control system that will trigger a continuous integration, a Jenkins build or
+ whatever you have configured and Jenkins build will produce artifacts from your application. So first
+ you will build your JavaScript application and then create a Docker image out of that JavaScript
+ artifact right. So what happens to this Docker image once it gets created by Jenkins build it gets
+ pushed to a private Docker repository. So usually in a company you would have a private repository
+ because you don't want other people to have access to your images. So you push it there. And now
+ as a next step could be configured on Jenkins or some other scripts or tools that Docker image
+ has to be deployed on a development server. So you have a development server that pulls the image
+ from the private repository, your JavaScript application image and then pulls the MongoDB that your
+ JavaScript application depends on from a Docker Hub. And now you have two containers, one your
+ custom container and a publicly available MongoDB container running on dev server. And they talk
+ to each other, you have to configure it of course, they talk and communicate to each other and run
+ as an app. So now if a tester for example or another developer logs in to a dev server they will be
+ able to test the application. So this is a simplified workflow how Docker will work in a real life
+ development process. So in the short time we actually learn all the basic building blocks the
+ most important parts of Docker. So you understand what images are how to start containers,
+ how they work and how to access them as well as how to actually create your own Docker image and
+ run it as a container. But if you want to learn more about Docker and practice your skills even more,
+ like how to connect your application to a Docker container, learn about Docker compose, Docker
+ volumes, etc. You can actually watch my full Docker tutorial. And if you want to learn Docker
+ in the context of DevOps and really really master it with things like private registries using Docker
+ to run Jenkins, integrate Docker in CI City pipelines and use it with various other technologies
+ like Terraform Ansible, etc. You can check out our complete DevOps bootcamp where you learn all
+ these and much more.

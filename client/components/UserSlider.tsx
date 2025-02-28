@@ -7,11 +7,12 @@ import { deleteCookie } from "cookies-next";
 const menus = [
   {name:'Home',path:'/user'},
   {name:'LLM Chat',path:'/user/chats'},
+  {name:'Docs Chat',path:'/user/docschat'},
   {name:'Image Chat',path:'/user/imagechat'},
   {name:'URL Chat',path:'/user/urlchat'},
   {name:'XLSX/CSV Chat',path:'/user/xlsxcsvchat'},
   {name:'SQL Chat',path:'/user/sqldbchat'},
-  {name:'JSON Chat',path:'/user/jsonchat'},
+  // {name:'JSON Chat',path:'/user/jsonchat'},
   {name:'Video Query Chat',path:'/user/videochat'},
 ]
 

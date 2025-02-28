@@ -7,7 +7,7 @@ import streamlit as st
 import re
 
 
-api_key = "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"
+api_key = "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"
 ## To load the database
 def load_db(db_name):
     db = SQLDatabase.from_uri(f"sqlite:///{db_name}")
