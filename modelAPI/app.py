@@ -142,6 +142,8 @@ def chat():
         # Call the LLM model with context and query
         if modelName == 'llama3.2:1b':
             response = ollama.chat(model='llama3.2:1b', messages=messages)
+        if modelName == 'qwen2.5:0.5b':
+            response = ollama.chat(model='qwen2.5:0.5b', messages=messages)
         elif modelName == 'llama3.2:3b':
             response = ollama.chat(model='llama3.2:3b', messages=messages)
         elif modelName == 'llama3.1:8b':

@@ -204,6 +204,7 @@ const ChatPage = () => {
             className="bg-black text-white outline-none w-[150px] p-2 rounded-xl cursor-pointer"
           >
             <option value="llama3.2:1b">llama3.2:1b</option>
+            <option value="qwen2.5:0.5b">qwen2.5:0.5b</option>
             <option value="llama3.2:3b">llama3.2:3b</option>
             <option value="llama3.1:8b">llama3.1:8b</option>
             <option value="qwen2.5:latest">qwen2.5:7b</option>

@@ -6,7 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { setCookie, getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
-import { PulseLoader, SyncLoader } from 'react-spinners'; // Import a modern loader
+import { PulseLoader, SyncLoader } from 'react-spinners'; 
 
 const Page = () => {
   const router = useRouter();
